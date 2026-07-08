@@ -1,4 +1,4 @@
-import { AnyDocumentId } from "@automerge/automerge-repo/slim"
+import { AnyDocumentId, Repo } from "@automerge/automerge-repo/slim"
 import { ChangeFn, ChangeOptions, Doc } from "@automerge/automerge/slim"
 import { useCallback, useEffect, useState } from "react"
 import { useDocHandle } from "./useDocHandle.js"
@@ -43,18 +43,21 @@ export type UseDocumentReturn<T> = [
 
 export function useDocument<T>(
   id: AnyDocumentId,
+  repo: Repo,
   params: UseDocumentSuspendingParams
 ): UseDocumentReturn<T>
 export function useDocument<T>(
   id: AnyDocumentId | undefined,
+  repo: Repo,
   params?: UseDocumentSynchronousParams
 ): UseDocumentReturn<T> | [undefined, () => void]
 export function useDocument<T>(
   id: AnyDocumentId | undefined,
+  repo: Repo,
   params: UseDocumentParams = { suspense: false }
 ): UseDocumentReturn<T> | [undefined, () => void] {
   // @ts-expect-error -- typescript doesn't realize we're discriminating these types the same way in both functions
-  const handle = useDocHandle<T>(id, params)
+  const handle = useDocHandle<T>(id, repo, params)
   // Initialize with current doc state
   const [doc, setDoc] = useState<Doc<T> | undefined>(() => handle?.doc())
   const [deleteError, setDeleteError] = useState<Error>()

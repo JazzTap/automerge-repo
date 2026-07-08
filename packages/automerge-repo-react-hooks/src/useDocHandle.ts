@@ -1,4 +1,4 @@
-import { AnyDocumentId, DocHandle } from "@automerge/automerge-repo/slim"
+import { AnyDocumentId, DocHandle, Repo } from "@automerge/automerge-repo/slim"
 import { PromiseWrapper, wrapPromise } from "./wrapPromise.js"
 import { useRepo } from "./useRepo.js"
 import { useEffect, useRef, useState } from "react"
@@ -26,17 +26,20 @@ type UseDocHandleParams =
 
 export function useDocHandle<T>(
   id: AnyDocumentId,
+  repo: Repo,
   params: UseDocHandleSuspendingParams
 ): DocHandle<T>
 export function useDocHandle<T>(
   id: AnyDocumentId | undefined,
+  repo: Repo,
   params?: UseDocHandleSynchronousParams
 ): DocHandle<T> | undefined
 export function useDocHandle<T>(
   id: AnyDocumentId | undefined,
+  repo: Repo,
   { suspense }: UseDocHandleParams = { suspense: false }
 ): DocHandle<T> | undefined {
-  const repo = useRepo()
+  // const repo = useRepo()
   const controllerRef = useRef<AbortController | undefined>(undefined)
   const [handle, setHandle] = useState<DocHandle<T> | undefined>()
 
